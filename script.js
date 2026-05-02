@@ -1,0 +1,98 @@
+// Map data with point information
+const points = [
+  null,
+  {
+    title: "思南路幼儿园",
+    content: "思南路幼儿园创建于1956年，是上海市示范性幼儿园，总部位于思南路91号。安昌浩在1919年5月25日抵沪后租下。"
+  },
+  {
+    title: "复兴公园",
+    content: "复兴公园位于上海市雁荡路105号，东邻重庆南路，南临复兴中路，西近思南路，北与科学会堂等为界。公园有四个大门出入；南门在复兴中路重庆南路转角；北门在雁荡路；西门出皋兰路；东门出重庆南路。1995年全园面积为8.89万平方米。复兴公园是上海唯一一座保留法国古典式风格的园林，也是近代上海中西园林文化交融的杰作。独立运动家李东辉将军与金山等青年常来散步。并在大草坪上（今：马恩铜像）拍下来沪同胞大合照。"
+  },
+  {
+    title: "K11",
+    content: "K11是由新世界集团执行副主席兼行政总裁郑志刚于2008年创立的全球首个融合艺术、人文、自然三大核心元素的原创品牌，首家项目于2009年11月27日在香港尖沙咀开幕，被誉为\"全球首个购物艺术馆\"。品牌以\"博物馆零售\"理念为核心，推动商业空间与文化艺术深度融合。"
+  },
+  {
+    title: "大韩民国临时政府旧址",
+    content: "大韩民国临时政府旧址位于中国上海市黄浦区马当路306弄4号，占地面积191平方米，建筑面积476.5平方米。大韩民国临时政府旧址底层为会议室、卫生间、厨房，二楼为金九办公室兼卧室、三楼为寝室的基本格局。大韩民国临时政府旧址入口处门罩肩部有巴洛克式卷叶纹堆塑，两侧方壁柱饰有5道圆弧凹槽，下接勒脚；门楣作牌匾式。清水红砖外墙，室内铺褐色木地板，车木楼梯扶栏。大韩民国临时政府旧址是韩国民族独立运动史的重要证据，地位重要，受到韩国官方和民间的高度关注，也是韩国官员和普通游客来沪后的\"打卡地\"，已成为中韩两国人民友谊的见证。1990年6月5日，大韩民国临时政府旧址被卢湾区人民政府（现黄浦区人民政府）公布为卢湾区文物保护单位（现黄浦区文物保护单位）。2026年1月6日，韩国总统李在明前往上海，参观日本殖民统治时期的大韩民国临时政府旧址。"
+  },
+  {
+    title: "独立新闻编辑部",
+    content: "韩国第一份日报是《独立新闻》（The Independent News），这份报纸于1898年创刊，标志着韩国现代新闻业的开端。作为韩国历史上的第一份日报，它不仅在信息传播上发挥了重要作用，还对后来的媒体发展产生了深远影响。《独立新闻》的出现，为韩国民众提供了一个了解国内外大事的平台，同时也推动了社会的进步和民主思想的传播。此地为韩人来沪后《独立新闻》的编辑部。这里见证了韩国仁人志士印刷独立思想的全过程。"
+  },
+  {
+    title: "豫园",
+    content: "豫园，位于上海市黄浦区福佑路168号，始建于明代嘉靖、万历年间，已有450余年历史，占地30余亩，与露香园、日涉园合称为\"明朝上海三大名园\"，名列现存的上海五大古典名园之首，为国家4A级旅游景区。豫园原是明代的一座私人园林，园主人潘允端曾任四川布政使，其父潘恩官至都察院左都御史和刑部尚书。潘恩年迈辞官告老还乡，潘允端为了让父亲安享晚年，经过20余年的苦心经营建成了豫园，在明代中后期被公认为\"东南名园冠\"。豫园有着典型的江南园林风貌，体现了明清两代南方园林\"清幽秀丽、精致玲珑\"的艺术风格，园内还保存着相当数量的古树名木及明清家具、名人字画、泥塑砖雕、额匾楹联等文物珍品，凝聚着丰富的中国传统文化艺术精华。"
+  }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+  const mapImage = document.getElementById('map-image');
+  const yearButtons = document.querySelectorAll('.year-btn');
+  const markers = document.querySelectorAll('.marker');
+  const popup = document.getElementById('popup');
+  const popupTitle = document.getElementById('popup-title');
+  const popupContent = document.getElementById('popup-content');
+  const closeBtn = document.querySelector('.close-btn');
+
+  // Set up year buttons
+  yearButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Update active button
+      yearButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      // Change map image
+      const year = button.getAttribute('data-year');
+      mapImage.src = `${year}.jpg`;
+
+      // Handle marker visibility (K11 and 豫园 only in current map)
+      markers.forEach(marker => {
+        const id = parseInt(marker.getAttribute('data-id'));
+        if ((year === '1918' || year === '1932') && (id === 3 || id === 6)) {
+          marker.style.display = 'none';
+        } else {
+          marker.style.display = 'block';
+        }
+      });
+    });
+  });
+
+  // Set up marker clicks
+  markers.forEach(marker => {
+    marker.addEventListener('click', () => {
+      const id = parseInt(marker.getAttribute('data-id'));
+      const point = points[id];
+
+      if (point) {
+        popupTitle.textContent = point.title;
+        popupContent.textContent = point.content;
+        popup.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling while popup is open
+      }
+    });
+  });
+
+  // Close popup
+  closeBtn.addEventListener('click', () => {
+    popup.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  });
+
+  // Close popup when clicking outside
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) {
+      popup.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  });
+
+  // Handle initial state (1918 map)
+  markers.forEach(marker => {
+    const id = parseInt(marker.getAttribute('data-id'));
+    if (id === 3 || id === 6) {
+      marker.style.display = 'none';
+    }
+  });
+});

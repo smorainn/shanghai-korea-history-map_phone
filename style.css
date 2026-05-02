@@ -1,0 +1,217 @@
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+
+    /* 👇 新增：让页面内容垂直居中，不滚动 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    /* 👇 新增：让整个内容一屏包裹，不溢出 */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 10px;
+    /* 👈 改小，减少间距 */
+    padding: 10px 0;
+    /* 👈 改小，更紧凑 */
+}
+
+h1 {
+    font-size: 2rem;
+    /* 👈 稍微缩小一点标题 */
+    color: #2c3e50;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #3498db;
+    font-weight: 500;
+}
+
+/* Map container */
+.map-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: #fff;
+
+    /* 👇 关键：让地图高度自适应屏幕，不撑大页面 */
+    max-height: 65vh;
+}
+
+#map-image {
+    width: 100%;
+    height: auto;
+    display: block;
+
+    /* 👇 让地图严格跟着容器缩放，永远不会溢出 */
+    max-height: 65vh;
+    object-fit: contain;
+}
+
+.marker {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: #e74c3c;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+    z-index: 10;
+}
+
+.marker:hover {
+    background: #c0392b;
+    box-shadow: 0 0 0 5px rgba(231, 76, 60, 0.4);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 0;
+    /* 👈 去掉多余间距 */
+}
+
+.year-btn {
+    padding: 12px 25px;
+    background: white;
+    border: 2px solid #3498db;
+    color: #3498db;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.15);
+}
+
+.year-btn:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.year-btn.active {
+    background: #3498db;
+    color: white;
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-content {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.popup.active .popup-content {
+    transform: translateY(0);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.8rem;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #e74c3c;
+}
+
+.popup h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+}
+
+.popup-content>div {
+    font-size: 1.05rem;
+    color: #2d3436;
+    line-height: 1.7;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Scrollbar styling */
+.popup-content>div::-webkit-scrollbar {
+    width: 8px;
+}
+
+.popup-content>div::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.popup-content>div::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 4px;
+}
+
+.popup-content>div::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
