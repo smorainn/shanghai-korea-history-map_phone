@@ -12,35 +12,26 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     padding: 20px;
-
-    /* 👇 新增：让页面内容垂直居中，不滚动 */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-
-    /* 👇 新增：让整个内容一屏包裹，不溢出 */
+    max-width: 1400px;
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 
 header {
     text-align: center;
-    margin-bottom: 10px;
-    /* 👈 改小，减少间距 */
     padding: 10px 0;
-    /* 👈 改小，更紧凑 */
 }
 
 h1 {
     font-size: 2rem;
-    /* 👈 稍微缩小一点标题 */
     color: #2c3e50;
     margin-bottom: 5px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
@@ -52,27 +43,30 @@ h1 {
     font-weight: 500;
 }
 
-/* Map container */
+/* 地图 + 右侧信息 并排 */
+.map-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* 地图容器 */
 .map-container {
     position: relative;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
+    flex: 1;
+    min-width: 500px;
+    max-height: 65vh;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     background: #fff;
-
-    /* 👇 关键：让地图高度自适应屏幕，不撑大页面 */
-    max-height: 65vh;
 }
 
 #map-image {
     width: 100%;
     height: auto;
     display: block;
-
-    /* 👇 让地图严格跟着容器缩放，永远不会溢出 */
     max-height: 65vh;
     object-fit: contain;
 }
@@ -95,13 +89,45 @@ h1 {
     box-shadow: 0 0 0 5px rgba(231, 76, 60, 0.4);
 }
 
-/* Controls */
+/* 右侧信息面板 */
+.info-panel {
+    width: 380px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+#info-title {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+#info-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+#info-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #2d3436;
+}
+
+/* 按钮 */
 .controls {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin: 0;
-    /* 👈 去掉多余间距 */
 }
 
 .year-btn {
@@ -128,90 +154,13 @@ h1 {
     color: white;
 }
 
-/* Popup */
+/* 隐藏旧弹窗（不再使用） */
 .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.65);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
+    display: none !important;
 }
 
-.popup.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.popup-content {
-    background: white;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 600px;
-    padding: 30px;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-}
-
-.popup.active .popup-content {
-    transform: translateY(0);
-}
-
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 1.8rem;
-    color: #7f8c8d;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-btn:hover {
-    color: #e74c3c;
-}
-
-.popup h2 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-size: 1.6rem;
-    border-bottom: 2px solid #ecf0f1;
-    padding-bottom: 10px;
-}
-
-.popup-content>div {
-    font-size: 1.05rem;
-    color: #2d3436;
-    line-height: 1.7;
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-right: 10px;
-}
-
-/* Scrollbar styling */
-.popup-content>div::-webkit-scrollbar {
-    width: 8px;
-}
-
-.popup-content>div::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.popup-content>div::-webkit-scrollbar-thumb {
-    background: #bdc3c7;
-    border-radius: 4px;
-}
-
-.popup-content>div::-webkit-scrollbar-thumb:hover {
-    background: #95a5a6;
+/* 选中点位变绿 */
+.marker.active {
+    background: #2ecc71;
+    box-shadow: 0 0 0 5px rgba(46, 204, 113, 0.4);
 }
