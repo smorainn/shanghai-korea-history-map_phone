@@ -164,3 +164,37 @@ h1 {
     background: #2ecc71;
     box-shadow: 0 0 0 5px rgba(46, 204, 113, 0.4);
 }
+
+/* ====================================== */
+/* ✅ 只在这里加手机适配 —— 电脑完全不变 */
+/* ====================================== */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .map-wrapper {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 15px !important;
+    }
+
+    .map-container {
+        min-width: unset !important;
+        min-height: 60vh !important;
+    }
+
+    .info-panel {
+        width: 100% !important;
+        max-height: 50vh !important;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    h1 {
+        font-size: 1.5rem !important;
+    }
+}
