@@ -179,15 +179,20 @@ h1 {
         gap: 15px !important;
     }
 
-    /* 手机地图保持和电脑一样的比例，点位绝对不飘 */
     .map-container {
         min-width: unset !important;
-        max-height: none !important;
+        /* 👇 复刻电脑端的高度限制 */
+        max-height: 65vh !important;
         height: auto !important;
+        /* 👇 用你地图原图的宽高比，强制容器和图片比例一致 */
+        aspect-ratio: 16 / 10;
     }
 
     #map-image {
-        max-height: none !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        max-height: unset !important;
     }
 
     .info-panel {
