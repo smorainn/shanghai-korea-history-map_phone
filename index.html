@@ -3,45 +3,60 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>沪韩历史足迹 | 复旦大学韩语系 & 蔚山高中研学交流</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>沪韩历史足迹 | 手机版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>沪韩历史足迹：1918-1932-当代地图对比</h1>
-            <p class="subtitle">复旦大学韩语系 & 韩国蔚山高中 研学交流项目</p>
+    <div class="phone-container">
+        <header class="app-header">
+            <h1>沪韩历史足迹</h1>
+            <p class="subtitle">复旦大学韩语系 & 蔚山高中研学项目</p>
         </header>
 
-        <!-- 地图 + 右侧信息 并排布局 -->
-        <div class="map-wrapper">
-            <div class="map-container">
-                <img id="map-image" src="./maps/1918.jpg" alt="1918年上海地图">
+        <nav class="timeline-controls">
+            <button class="year-btn active" data-year="1918">
+                <i data-lucide="calendar"></i> 1918年
+            </button>
+            <button class="year-btn" data-year="1932">
+                <i data-lucide="calendar"></i> 1932年
+            </button>
+            <button class="year-btn" data-year="current">
+                <i data-lucide="map-pin"></i> 当代
+            </button>
+        </nav>
 
-                <!-- 地图标记点 -->
-                <div class="marker" data-id="1" style="left: 15%; top: 40%;"></div>
-                <div class="marker" data-id="2" style="left: 25%; top: 48%;"></div>
-                <div class="marker" data-id="3" style="left: 35%; top: 52%;"></div>
-                <div class="marker" data-id="4" style="left: 50%; top: 55%;"></div>
-                <div class="marker" data-id="5" style="left: 65%; top: 50%;"></div>
-                <div class="marker" data-id="6" style="left: 80%; top: 60%;"></div>
+        <main class="map-wrapper">
+            <div class="map-container" id="map-container">
+                <img id="map-image" src="./maps/1918.jpg" alt="上海历史地图">
+
+                <div class="marker" data-id="1"></div>
+                <div class="marker" data-id="2"></div>
+                <div class="marker" data-id="3"></div>
+                <div class="marker" data-id="4"></div>
+                <div class="marker" data-id="5"></div>
+                <div class="marker" data-id="6"></div>
+            </div>
+        </main>
+
+        <section class="info-panel" id="info-panel">
+            <div class="panel-header">
+                <div class="drag-handle"></div>
+                <h2 id="info-title">点击上方地图红点查看历史足迹</h2>
             </div>
 
-            <!-- 右侧信息面板（点击红点自动显示） -->
-            <div class="info-panel">
-                <h2 id="info-title">点击地图红点查看介绍</h2>
-                <img id="info-image" alt="点位图片">
-                <div id="info-text">暂无内容</div>
+            <div class="panel-content">
+                <div class="image-wrapper">
+                    <img id="info-image" alt="点位图片">
+                </div>
+                <div id="info-text" class="info-text">
+                    请在上方地图中选择任意红色历史标记点，开启沪韩研学历史之旅。
+                </div>
             </div>
-        </div>
-
-        <footer class="controls">
-            <button class="year-btn active" data-year="1918">1918年</button>
-            <button class="year-btn" data-year="1932">1932年</button>
-            <button class="year-btn" data-year="current">当代</button>
-        </footer>
+        </section>
     </div>
 
     <script src="script.js"></script>

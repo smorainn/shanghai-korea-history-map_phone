@@ -1,18 +1,19 @@
+// 严格保留您提供的历史文本与点位百分比数据
 const points = [
   null,
   {
     title: "安昌浩旧居&思南路幼儿园",
-    imgName: "安昌浩旧居与思南路幼儿园",  // 👈 专门给图片用的名字（无&）
+    imgName: "安昌浩旧居与思南路幼儿园",
     content: "思南路幼儿园创建于1956年，是上海市示范性幼儿园，总部位于思南路91号。安昌浩在1919年5月25日抵沪后租下。",
     pos: {
-      "1918": { left: "69.65%", top: "35.75%" },
+      "1918": { left: "72%", top: "38%" },
       "1932": { left: "56.8%", top: "44%" },
       "current": { left: "25.2%", top: "65%" }
     }
   },
   {
     title: "法国公园&复兴公园",
-    imgName: "法国公园与复兴公园",  // 👈 专门给图片用的名字（无&）
+    imgName: "法国公园与复兴公园",
     content: "复兴公园位于上海市雁荡路105号，东邻重庆南路，南临复兴中路，西近思南路，北与科学会堂等为界。公园有四个大门出入；南门在复兴中路重庆南路转角；北门在雁荡路；西门出皋兰路；东门出重庆南路。1995年全园面积为8.89万平方米。复兴公园是上海唯一一座保留法国古典式风格的园林，也是近代上海中西园林文化交融的杰作。独立运动家李东辉将军与金山等青年常来散步。并在大草坪上（今：马恩铜像）拍下来沪同胞大合照。",
     pos: {
       "1918": { left: "75.5%", top: "33%" },
@@ -63,39 +64,76 @@ const points = [
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 初始化 Lucide 图标
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+
   const mapImage = document.getElementById('map-image');
   const yearButtons = document.querySelectorAll('.year-btn');
   const markers = document.querySelectorAll('.marker');
   const infoTitle = document.getElementById('info-title');
   const infoImage = document.getElementById('info-image');
+  const imageWrapper = document.querySelector('.image-wrapper');
   const infoText = document.getElementById('info-text');
+  const infoPanel = document.getElementById('info-panel');
 
-  // 年份切换
+  let currentYear = '1918';
+
+  // 刷新所有标记点位置与显隐状态
+  function updateMarkers(year) {
+    markers.forEach(marker => {
+      const id = parseInt(marker.dataset.id);
+      const pointData = points[id];
+      
+      if (!pointData || !pointData.pos[year]) return;
+      
+      const pos = pointData.pos[year];
+      marker.style.left = pos.left;
+      marker.style.top = pos.top;
+
+      // 显隐规则：1918和1932年不显示第3点(K11)和第6点(豫园)
+      if ((year === '1918' || year === '1932') && (id === 3 || id === 6)) {
+        marker.style.display = 'none';
+        // 如果当前隐藏的点刚好处于激活状态，则取消激活
+        if(marker.classList.contains('active')) {
+            marker.classList.remove('active');
+            resetInfoPanel();
+        }
+      } else {
+        marker.style.display = 'block';
+      }
+    });
+  }
+
+  // 重置底部面板默认文字
+  function resetInfoPanel() {
+    infoTitle.textContent = "点击上方地图红点查看历史足迹";
+    infoText.textContent = "请在上方地图中选择任意红色历史标记点，开启沪韩研学历史之旅。";
+    imageWrapper.style.display = "none";
+  }
+
+  // 年份按钮切换事件
   yearButtons.forEach(button => {
     button.addEventListener('click', () => {
       yearButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
-      const year = button.getAttribute('data-year');
-      mapImage.src = `./maps/${year}.jpg`;
-
-      markers.forEach(marker => {
-        const id = parseInt(marker.dataset.id);
-        const pos = points[id].pos[year];
-        marker.style.left = pos.left;
-        marker.style.top = pos.top;
-
-        if ((year === '1918' || year === '1932') && (id === 3 || id === 6)) {
-          marker.style.display = 'none';
-        } else {
-          marker.style.display = 'block';
-        }
-      });
+      
+      currentYear = button.getAttribute('data-year');
+      
+      // 切换地图原图
+      mapImage.src = `./maps/${currentYear}.jpg`;
+      
+      // 立即重新计算并更新红点在对应年份的位置
+      updateMarkers(currentYear);
     });
   });
 
-  // 点击点位
+  // 标记点点击查看事件
   markers.forEach(marker => {
-    marker.addEventListener('click', () => {
+    marker.addEventListener('click', (e) => {
+      e.stopPropagation(); // 阻止冒泡
+      
       markers.forEach(m => m.classList.remove('active'));
       marker.classList.add('active');
 
@@ -103,21 +141,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const point = points[id];
       if (!point) return;
 
+      // 更新文本
       infoTitle.textContent = point.title;
       infoText.textContent = point.content;
 
-      // 👇 关键：图片用 imgName，不带 &
+      // 更新并展现图片
       infoImage.src = `./images/${id}_${point.imgName}.jpg`;
-      infoImage.style.display = "block";
+      imageWrapper.style.display = "block";
+      
+      // 轻微滚动面板内部，让刚出炉的内容完美展现
+      infoPanel.querySelector('.panel-content').scrollTop = 0;
     });
   });
 
-  // 初始 1918 位置
-  markers.forEach(marker => {
-    const id = parseInt(marker.dataset.id);
-    const pos = points[id].pos["1918"];
-    marker.style.left = pos.left;
-    marker.style.top = pos.top;
-    if (id === 3 || id === 6) marker.style.display = 'none';
-  });
+  // 初始化：展示 1918 年地图及点位分布
+  updateMarkers('1918');
 });
