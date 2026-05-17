@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const imageWrapper = document.querySelector('.image-wrapper');
   const infoText = document.getElementById('info-text');
   const infoPanel = document.getElementById('info-panel');
+  const interactionZone = document.getElementById('interaction-zone');
 
   let currentYear = '1918';
 
@@ -111,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     infoTitle.textContent = "点击上方地图红点查看历史足迹";
     infoText.textContent = "请在上方地图中选择任意红色历史标记点，开启沪韩研学历史之旅。";
     imageWrapper.style.display = "none";
+    interactionZone.style.display = "none"; // 隐藏评论区
   }
 
   // 年份按钮切换事件
@@ -148,6 +150,55 @@ document.addEventListener('DOMContentLoaded', () => {
       // 更新并展现图片
       infoImage.src = `./images/${id}_${point.imgName}.jpg`;
       imageWrapper.style.display = "block";
+      
+      // ==========================================
+      // ➕ 新增：联动动态加载/刷新该点位的 Giscus 评论和点赞区
+      // ==========================================
+      interactionZone.style.display = "block"; // 显示评论区
+      
+      // 通过动态更改网页 Title，让 Giscus 将不同点位识别为独立讨论帖
+      const targetTerm = `研学足迹 - ${point.title}`;
+      document.title = targetTerm;
+
+      const giscusContainer = document.querySelector('.giscus');
+      
+      // 判断是否是初次加载
+      if (!document.getElementById('giscus-script')) {
+        const script = document.createElement('script');
+        script.id = 'giscus-script';
+        script.src = "https://giscus.app/client.js";
+        script.async = true;
+        script.crossOrigin = "anonymous";
+
+        // 完美套用您的专用参数
+        script.setAttribute("data-repo", "smorainn/shanghai-korea-history-map_phone");
+        script.setAttribute("data-repo-id", "R_kgDOSf7xTQ");
+        script.setAttribute("data-category", "General");
+        script.setAttribute("data-category-id", "DIC_kwDOSf7xTc4C9PvN");
+        
+        // 使用特定词组(标题)进行精准独立映射
+        script.setAttribute("data-mapping", "title"); 
+        script.setAttribute("data-strict", "0");
+        script.setAttribute("data-reactions-enabled", "1");
+        script.setAttribute("data-emit-metadata", "0");
+        script.setAttribute("data-input-position", "top");
+        script.setAttribute("data-theme", "light");
+        script.setAttribute("data-lang", "zh-CN");
+
+        giscusContainer.appendChild(script);
+      } else {
+        // 如果已经存在脚本，代表是切换红点，向 Giscus 内置 iframe 发送 postMessage 指令，瞬间切换到新点位的数据
+        function updateGiscusTheme() {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe || !iframe.contentWindow) return;
+          iframe.contentWindow.postMessage(
+            { giscus: { setConfig: { term: targetTerm } } },
+            'https://giscus.app'
+          );
+        }
+        // 稍微缓冲 200 毫秒确保容器平稳切换
+        setTimeout(updateGiscusTheme, 200);
+      }
       
       // 轻微滚动面板内部，让刚出炉的内容完美展现
       infoPanel.querySelector('.panel-content').scrollTop = 0;
